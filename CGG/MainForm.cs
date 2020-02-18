@@ -12,6 +12,7 @@ namespace CGG
         private int b = 50;
         private Point Center => new Point(-a * Scale, Size.Height / 2);
         private int Scale => Size.Width / (b - a);
+        private Settings settings = new Settings();
         
         public MainForm()
         {
@@ -23,6 +24,14 @@ namespace CGG
         {
             if (e.KeyCode == Keys.Space)
                 Invalidate();
+            else if (e.KeyCode == Keys.Enter)
+            {
+//                var grid = new PropertyGrid();
+//                Controls.Add(grid);
+//                grid.SelectedObject = settings;
+//                grid.Show();
+//                Invalidate();
+            }
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -30,11 +39,11 @@ namespace CGG
             DrawAxises(e.Graphics);
             var g = e.Graphics;
             var pen = Pens.DodgerBlue;
-            var drawer = new FunctionDrawer(Size, a, b, MathFunction);
+            var drawer = new ScaleFunctionDrawer(Size, a, b, MathFunction, settings.ScaleMode);// new FunctionDrawer(Size, a, b, MathFunction);
             var prevPoint = new Point();
-            foreach (var point in drawer.GetPoints(ScaleMode.None))
+            foreach (var point in drawer.GetPoints())
             {
-                var shiftedPoint = new Point(point.X, -point.Y + Center.Y);
+                var shiftedPoint = point;
                 g.DrawLine(pen, prevPoint, shiftedPoint);
                 prevPoint = shiftedPoint;
             }
@@ -57,6 +66,7 @@ namespace CGG
 
         private static double MathFunction(double x)
         {
+            return Math.Sin(x) * 10;
             if (x < 1 && x > -1)
                 return 10;
             if (x < 10)
@@ -68,5 +78,10 @@ namespace CGG
             return Math.Sin(x) * 100;
             //return x * Math.Sin(x * x);
         }
+    }
+
+    internal class Settings
+    {
+        public ScaleMode ScaleMode { get; set; } = ScaleMode.None;
     }
 }
