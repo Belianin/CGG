@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace CGG
@@ -7,9 +8,9 @@ namespace CGG
     public partial class MainForm : Form
     {
         private Font font = new Font("Arial", 10);
-        private int a = -20;
-        private int b = 80;
-        private Point Center => new Point(-a * Size.Width / (b - a), Size.Height / 2);
+        private int a = -5;
+        private int b = 50;
+        private Point Center => new Point(-a * Scale, Size.Height / 2);
         private int Scale => Size.Width / (b - a);
         
         public MainForm()
@@ -18,44 +19,51 @@ namespace CGG
             Invalidate();
         }
 
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Space)
+                Invalidate();
+        }
+
         protected override void OnPaint(PaintEventArgs e)
         {
-            DrawAxises(e.Graphics, Center, Scale);
+            DrawAxises(e.Graphics);
             var g = e.Graphics;
             var pen = Pens.DodgerBlue;
             var drawer = new FunctionDrawer(Size, a, b, MathFunction);
             var prevPoint = new Point();
-            foreach (var point in drawer.GetPoints())
+            foreach (var point in drawer.GetPoints(ScaleMode.None))
             {
-                var shiftedPoint = new Point(point.X, point.Y + Center.Y);
+                var shiftedPoint = new Point(point.X, -point.Y + Center.Y);
                 g.DrawLine(pen, prevPoint, shiftedPoint);
                 prevPoint = shiftedPoint;
             }
         }
 
-        private void DrawAxises(Graphics g, Point center, int scale)
+        private void DrawAxises(Graphics g)
         {
-            g.DrawLine(Pens.Black, 0, center.Y, Size.Width, center.Y);
-            const int xCount = 10;
-            for (var x = 0; x < xCount; x++)
-            {
-                var xx = center.X + x * Size.Width / xCount;
-                g.DrawLine(Pens.Black, xx, center.Y - 5, xx, center.Y + 5);
-                g.DrawString((x * scale).ToString(), font, Brushes.Black, xx, center.Y + 5);
-            }
+            g.DrawLine(Pens.Black, 0, Center.Y, Size.Width, Center.Y);
+            g.DrawLine(Pens.Black, Center.X, 0, Center.X, Size.Height);
             
-            g.DrawLine(Pens.Black, center.X, 0, center.X, Size.Height);
-            const int yCount = 10;
-            for (var y = 0; y < yCount; y++)
+            const int scale = 10;
+            var step = (Size.Width - Center.X) / scale;
+            for (var x = 0; x < scale; x++)
             {
-                var yy = center.Y + y * Size.Height / yCount;
-                g.DrawLine(Pens.Black, center.X - 5, yy, center.X + 5, yy);
-                //g.DrawString((x * scale).ToString(), font, brush, xx, center.Y + 5);
+                var xx = Center.X + x * step;
+                g.DrawLine(Pens.Black, xx, Center.Y - 5, xx, Center.Y + 5);
+                g.DrawString((x * b / (double) scale).ToString(CultureInfo.CurrentCulture), font, Brushes.Black, xx, Center.Y + 5);
             }
         }
 
         private static double MathFunction(double x)
         {
+            if (x < 1 && x > -1)
+                return 10;
+            if (x < 10)
+                return x;
+            if (x < 30)
+                return -x / 2;
+            return x;
             //return x - 2;
             return Math.Sin(x) * 100;
             //return x * Math.Sin(x * x);

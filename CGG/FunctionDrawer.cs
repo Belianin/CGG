@@ -23,12 +23,12 @@ namespace CGG
             (maxY, minY) = FindMaxAndMin();
         }
 
-        public IEnumerable<Point> GetPoints()
+        public IEnumerable<Point> GetPoints(ScaleMode scale)
         {
             for (var xx = 0; xx < size.Width; xx++)
             {
                 var y = CalculateY(xx);
-                var yy = y;//(y - maxY) * size.Height / (minY - maxY);
+                var yy = Scale(scale, y);
                 yield return new Point(xx, (int) yy);
             }
         }
@@ -37,6 +37,16 @@ namespace CGG
         {
             var x = a + xx * (b - a) / (double) size.Width;
             return function(x);
+        }
+
+        private double Scale(ScaleMode scaleMode, double y)
+        {
+            return scaleMode switch
+            {
+                ScaleMode.None => y,
+                ScaleMode.Y => (y - maxY) * size.Height / (minY - maxY),
+                _ => throw new ArgumentOutOfRangeException(nameof(scaleMode), scaleMode, null)
+            };
         }
 
         private (double maxY, double minY) FindMaxAndMin()
@@ -55,7 +65,5 @@ namespace CGG
 
             return (max, min);
         }
-
-        
     }
 }
