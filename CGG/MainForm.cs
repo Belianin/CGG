@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Windows.Forms;
 
@@ -17,6 +18,7 @@ namespace CGG
         public MainForm()
         {
             InitializeComponent();
+            BackColor = settings.Theme.Background;
             Invalidate();
         }
 
@@ -38,7 +40,7 @@ namespace CGG
         {
             DrawAxises(e.Graphics);
             var g = e.Graphics;
-            var pen = Pens.DodgerBlue;
+            var pen = new Pen(settings.Theme.Function);
             var drawer = new ScaleFunctionDrawer(Size, a, b, MathFunction, settings.ScaleMode);// new FunctionDrawer(Size, a, b, MathFunction);
             var prevPoint = new Point();
             foreach (var point in drawer.GetPoints())
@@ -51,38 +53,30 @@ namespace CGG
 
         private void DrawAxises(Graphics g)
         {
-            g.DrawLine(Pens.Black, 0, Center.Y, Size.Width, Center.Y);
-            g.DrawLine(Pens.Black, Center.X, 0, Center.X, Size.Height);
+            var pen = new Pen(settings.Theme.Axis);
+            g.DrawLine(pen, 0, Center.Y, Size.Width, Center.Y);
+            g.DrawLine(pen, Center.X, 0, Center.X, Size.Height);
             
             const int scale = 10;
             var step = (Size.Width - Center.X) / scale;
             for (var x = 0; x < scale; x++)
             {
                 var xx = Center.X + x * step;
-                g.DrawLine(Pens.Black, xx, Center.Y - 5, xx, Center.Y + 5);
-                g.DrawString((x * b / (double) scale).ToString(CultureInfo.CurrentCulture), font, Brushes.Black, xx, Center.Y + 5);
+                g.DrawLine(pen, xx, Center.Y - 5, xx, Center.Y + 5);
+                g.DrawString((x * b / (double) scale).ToString(CultureInfo.CurrentCulture), font, new SolidBrush(settings.Theme.Axis), xx, Center.Y + 5);
             }
         }
 
         private static double MathFunction(double x)
         {
             return x * Math.Sin(x * x) * 2;
-            return Math.Sin(x) * 10;
-            if (x < 1 && x > -1)
-                return 10;
-            if (x < 10)
-                return x;
-            if (x < 30)
-                return -x / 2;
-            return x;
-            //return x - 2;
-            return Math.Sin(x) * 100;
-            //return x * Math.Sin(x * x);
         }
     }
 
     internal class Settings
     {
         public ScaleMode ScaleMode { get; set; } = ScaleMode.Proportional;
+        
+        public Theme Theme { get; set; } = Themes.Dark;
     }
 }
