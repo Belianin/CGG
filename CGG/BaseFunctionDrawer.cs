@@ -24,5 +24,22 @@ namespace CGG
             var x = A + xx * (B - A) / (double) Size.Width;
             return Function(x);
         }
+        
+        protected (int maxY, int minY) FindMaxAndMin()
+        {
+            var min = Function(A);
+            var max = Function(A);
+            for (var xx = 0; xx < Size.Width; xx++)
+            {
+                var y = CalculateY(xx);
+
+                if (y > max)
+                    max = y;
+                else if (y < min)
+                    min = y;
+            }
+
+            return ((int) max, (int) min);
+        }
     }
 }

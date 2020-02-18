@@ -9,7 +9,7 @@ namespace CGG
     {
         private Font font = new Font("Arial", 10);
         private int a = -5;
-        private int b = 50;
+        private int b = 10;
         private Point Center => new Point(-a * Scale, Size.Height / 2);
         private int Scale => Size.Width / (b - a);
         private Settings settings = new Settings();
@@ -66,6 +66,7 @@ namespace CGG
 
         private static double MathFunction(double x)
         {
+            return x * Math.Sin(x * x) * 2;
             return Math.Sin(x) * 10;
             if (x < 1 && x > -1)
                 return 10;
@@ -82,6 +83,6 @@ namespace CGG
 
     internal class Settings
     {
-        public ScaleMode ScaleMode { get; set; } = ScaleMode.None;
+        public ScaleMode ScaleMode { get; set; } = ScaleMode.Proportional;
     }
 }
