@@ -36,6 +36,20 @@ namespace CGG
             }
         }
 
+        protected override void OnMouseWheel(MouseEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                b++;
+                Invalidate();
+            }
+            else if (e.Delta < 0)
+            {
+                b--;
+                Invalidate();
+            }
+        }
+
         protected override void OnPaint(PaintEventArgs e)
         {
             DrawAxises(e.Graphics);
