@@ -23,6 +23,7 @@ namespace CGG
                 ScaleMode.Proportional => (y => (y - maxY) * this.size.Height / (minY - maxY)),
                 _ => scale
             };
+
         }
 
         public IEnumerable<IEnumerable<Point>> GetPoints()
@@ -30,13 +31,10 @@ namespace CGG
             var result = new List<Point>();
             for (var xx = 0; xx < size.Width; xx++)
             {
-                if (!TryCalculateY(xx, out var y))
+                if (!TryCalculateY(xx, out var y) && result.Count != 0)
                 {
-                    if (result.Count != 0)
-                    {
-                        yield return result;
-                        result = new List<Point>();
-                    }
+                    yield return result;
+                    result = new List<Point>();
                 }
                 else
                 {

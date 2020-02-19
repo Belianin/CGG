@@ -15,7 +15,7 @@ namespace CGG
     {
         public static Theme Default => new Theme
         {
-            Background = Color.WhiteSmoke,
+            Background = Color.White,
             Axis = Color.Black,
             Function = Color.Red
         };

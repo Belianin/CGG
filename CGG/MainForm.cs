@@ -88,7 +88,8 @@ namespace CGG
 
         private void DrawFunction(Graphics g, IEnumerable<Point> points, Color color)
         {
-            var pen = new Pen(color);
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            var pen = new Pen(color, 2);
             var prevPoint = new Point();
             var first = true;
 
@@ -119,7 +120,7 @@ namespace CGG
             {
                 var xx = Center.X + x * step;
                 g.DrawLine(pen, xx, Center.Y - 5, xx, Center.Y + 5);
-                g.DrawString(Math.Round(x * function.Beta / scale, 2).ToString(CultureInfo.CurrentCulture), font, new SolidBrush(settings.Theme.Axis), xx, Center.Y + 5);
+                g.DrawString(Math.Round(x * function.Beta / scale, 2).ToString(CultureInfo.InvariantCulture), font, new SolidBrush(settings.Theme.Axis), xx, Center.Y + 5);
             }
         }
     }
@@ -128,6 +129,6 @@ namespace CGG
     {
         public ScaleMode ScaleMode { get; set; } = ScaleMode.None;
         
-        public Theme Theme { get; set; } = Themes.Dark;
+        public Theme Theme { get; set; } = Themes.Default;
     }
 }

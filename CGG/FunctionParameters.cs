@@ -18,12 +18,6 @@ namespace CGG
             var sqrt = x * x * x / (B + x);
             if (sqrt < 0)
                 return false;
-            
-            if (!double.IsNormal(sqrt))
-            {
-                Console.WriteLine(x);
-                Console.WriteLine(A - x + Math.Sqrt(sqrt));
-            }
 
             y = A - x + Math.Sqrt(sqrt);
             return true;
