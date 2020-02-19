@@ -9,16 +9,16 @@ namespace CGG
     public partial class MainForm : Form
     {
         private Font font = new Font("Arial", 10);
-        private int a = -5;
-        private int b = 10;
-        private Point Center => new Point(-a * Scale, Size.Height / 2);
-        private int Scale => Size.Width / (b - a);
+        private double a = -5;
+        private double b = 10;
+        private Point Center => new Point((int) (-a * Size.Width / (b - a)), Size.Height / 2);
         private Settings settings = new Settings();
         
         public MainForm()
         {
             InitializeComponent();
             BackColor = settings.Theme.Background;
+            Size = new Size(1024, 768);
             Invalidate();
         }
 
@@ -40,12 +40,14 @@ namespace CGG
         {
             if (e.Delta > 0)
             {
-                b++;
+                b += 0.5;
+                a -= 0.5;
                 Invalidate();
             }
             else if (e.Delta < 0)
             {
-                b--;
+                b -= 0.5;
+                a += 0.5;
                 Invalidate();
             }
         }
@@ -77,7 +79,7 @@ namespace CGG
             {
                 var xx = Center.X + x * step;
                 g.DrawLine(pen, xx, Center.Y - 5, xx, Center.Y + 5);
-                g.DrawString((x * b / (double) scale).ToString(CultureInfo.CurrentCulture), font, new SolidBrush(settings.Theme.Axis), xx, Center.Y + 5);
+                g.DrawString(Math.Round(x * b / scale, 2).ToString(CultureInfo.CurrentCulture), font, new SolidBrush(settings.Theme.Axis), xx, Center.Y + 5);
             }
         }
 

@@ -6,12 +6,12 @@ namespace CGG
     public abstract class BaseFunctionDrawer
     {
         protected readonly Size Size;
-        protected readonly int A;
-        protected readonly int B;
+        protected readonly double A;
+        protected readonly double B;
         protected readonly Func<double, double> Function;
-        protected Point Center => new Point(-A * Size.Width / (B - A), Size.Height / 2);
+        protected Point Center => new Point((int) (-A * Size.Width / (B - A)), Size.Height / 2);
 
-        protected BaseFunctionDrawer(Size size, int a, int b, Func<double, double> function)
+        protected BaseFunctionDrawer(Size size, double a, double b, Func<double, double> function)
         {
             Size = size;
             A = a;
@@ -19,13 +19,13 @@ namespace CGG
             Function = function;
         }
 
-        protected double CalculateY(int xx)
+        protected double CalculateY(double xx)
         {
-            var x = A + xx * (B - A) / (double) Size.Width;
+            var x = A + xx * (B - A) / Size.Width;
             return Function(x);
         }
         
-        protected (int maxY, int minY) FindMaxAndMin()
+        protected (double maxY, double minY) FindMaxAndMin()
         {
             var min = Function(A);
             var max = Function(A);
@@ -39,7 +39,7 @@ namespace CGG
                     min = y;
             }
 
-            return ((int) max, (int) min);
+            return (max, min);
         }
     }
 }

@@ -6,8 +6,8 @@ namespace CGG
 {
     public class XFunctionDrawer : BaseFunctionDrawer, IFunctionDrawer
     {
-        private readonly int maxY;
-        private readonly int minY;
+        private readonly double maxY;
+        private readonly double minY;
         
         public XFunctionDrawer(Size size, int a, int b, Func<double, double> function)
             : base(size, a, b, function)
@@ -23,7 +23,7 @@ namespace CGG
             {
                 var xx = (x - A) * Size.Width / (B - A);
                 var yy = (CalculateY(xx) - maxY) * Size.Width / (B - A) * dy / dx;
-                yield return new Point(xx, (int) yy);
+                yield return new Point((int) xx, (int) yy);
             }
         }
     }

@@ -6,11 +6,11 @@ namespace CGG
 {
     public class ScaleFunctionDrawer : BaseFunctionDrawer, IFunctionDrawer
     {
-        private readonly int maxY;
-        private readonly int minY;
+        private readonly double maxY;
+        private readonly double minY;
         private readonly Func<double, double> scale;
 
-        public ScaleFunctionDrawer(Size size, int a, int b, Func<double, double> function, ScaleMode scaleMode)
+        public ScaleFunctionDrawer(Size size, double a, double b, Func<double, double> function, ScaleMode scaleMode)
             : base(size, a, b, function)
         {
             (maxY, minY) = FindMaxAndMin();
