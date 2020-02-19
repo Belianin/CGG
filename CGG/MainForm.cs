@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
@@ -58,10 +60,19 @@ namespace CGG
         {
             DrawAxises(e.Graphics);
             var g = e.Graphics;
-            var pen = new Pen(settings.Theme.Function);
             var drawer = new ScaleFunctionDrawer(ClientSize, a, b, MathFunction, settings.ScaleMode); // new FunctionDrawer(ClientSize, a, b, MathFunction);
+            DrawFunction(g, drawer.GetPoints(), settings.Theme.Function);
+            
+            // drawer = new ScaleFunctionDrawer(ClientSize, a, b, x => x, settings.ScaleMode);
+            // DrawFunction(g, drawer.GetPoints(), Color.Red);
+        }
+
+        private void DrawFunction(Graphics g, IEnumerable<Point> points, Color color)
+        {
+            var pen = new Pen(color);
             var prevPoint = new Point();
-            foreach (var point in drawer.GetPoints())
+            
+            foreach (var point in points)
             {
                 g.DrawLine(pen, prevPoint, point);
                 prevPoint = point;
@@ -86,7 +97,7 @@ namespace CGG
 
         private static double MathFunction(double x)
         {
-            //return Math.Sin(x) * 10;
+            //return Math.Sin(x) * 100;
             return x * Math.Sin(x * x) * 2;
         }
     }
