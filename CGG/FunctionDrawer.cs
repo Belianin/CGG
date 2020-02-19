@@ -6,7 +6,7 @@ namespace CGG
 {
     public class FunctionDrawer : BaseFunctionDrawer, IFunctionDrawer
     {
-        public FunctionDrawer(Size size, int a, int b, Func<double, double> function) 
+        public FunctionDrawer(Size size, double a, double b, Func<double, double> function) 
             : base(size, a, b, function) {}
 
         public IEnumerable<Point> GetPoints()

@@ -6,19 +6,17 @@ namespace CGG
 {
     public class ScaleFunctionDrawer : BaseFunctionDrawer, IFunctionDrawer
     {
-        private readonly double maxY;
-        private readonly double minY;
         private readonly Func<double, double> scale;
 
         public ScaleFunctionDrawer(Size size, double a, double b, Func<double, double> function, ScaleMode scaleMode)
             : base(size, a, b, function)
         {
-            (maxY, minY) = FindMaxAndMin();
+            var (maxY, minY) = FindMaxAndMin();
             
             switch (scaleMode)
             {
                 case ScaleMode.None:
-                    scale = y => y + Center.Y;
+                    scale = y => -y + Center.Y;
                     break;
                 case ScaleMode.Proportional:
                     scale = y => (y - maxY) * Size.Height / (minY - maxY);
@@ -30,8 +28,8 @@ namespace CGG
         {
             for (var xx = 0; xx < Size.Width; xx++)
             {
-                var yy = (int) scale(CalculateY(xx));
-                yield return new Point(xx, yy);
+                var yy = scale(CalculateY(xx));
+                yield return new Point(xx, (int) yy);
             }
         }
     }

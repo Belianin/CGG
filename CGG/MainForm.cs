@@ -11,14 +11,15 @@ namespace CGG
         private Font font = new Font("Arial", 10);
         private double a = -5;
         private double b = 10;
-        private Point Center => new Point((int) (-a * Size.Width / (b - a)), Size.Height / 2);
+        private Point Center => new Point((int) (-a * ClientSize.Width / (b - a)), ClientSize.Height / 2);
         private Settings settings = new Settings();
         
         public MainForm()
         {
             InitializeComponent();
             BackColor = settings.Theme.Background;
-            Size = new Size(1024, 768);
+            //FormBorderStyle = FormBorderStyle.None;
+            ClientSize = new Size(1024, 768);
             Invalidate();
         }
 
@@ -38,16 +39,17 @@ namespace CGG
 
         protected override void OnMouseWheel(MouseEventArgs e)
         {
+            //var delta = 1 + (b - a) / 200;
             if (e.Delta > 0)
             {
-                b += 0.5;
-                a -= 0.5;
+                b *= 1.01;
+                a *= 1.01;
                 Invalidate();
             }
             else if (e.Delta < 0)
             {
-                b -= 0.5;
-                a += 0.5;
+                b *= 0.99;
+                a *= 0.99;
                 Invalidate();
             }
         }
@@ -57,24 +59,23 @@ namespace CGG
             DrawAxises(e.Graphics);
             var g = e.Graphics;
             var pen = new Pen(settings.Theme.Function);
-            var drawer = new ScaleFunctionDrawer(Size, a, b, MathFunction, settings.ScaleMode);// new FunctionDrawer(Size, a, b, MathFunction);
+            var drawer = new ScaleFunctionDrawer(ClientSize, a, b, MathFunction, settings.ScaleMode); // new FunctionDrawer(ClientSize, a, b, MathFunction);
             var prevPoint = new Point();
             foreach (var point in drawer.GetPoints())
             {
-                var shiftedPoint = point;
-                g.DrawLine(pen, prevPoint, shiftedPoint);
-                prevPoint = shiftedPoint;
+                g.DrawLine(pen, prevPoint, point);
+                prevPoint = point;
             }
         }
 
         private void DrawAxises(Graphics g)
         {
             var pen = new Pen(settings.Theme.Axis);
-            g.DrawLine(pen, 0, Center.Y, Size.Width, Center.Y);
-            g.DrawLine(pen, Center.X, 0, Center.X, Size.Height);
+            g.DrawLine(pen, 0, Center.Y, ClientSize.Width, Center.Y);
+            g.DrawLine(pen, Center.X, 0, Center.X, ClientSize.Height);
             
             const int scale = 10;
-            var step = (Size.Width - Center.X) / scale;
+            var step = (ClientSize.Width - Center.X) / scale;
             for (var x = 0; x < scale; x++)
             {
                 var xx = Center.X + x * step;
@@ -85,6 +86,7 @@ namespace CGG
 
         private static double MathFunction(double x)
         {
+            //return Math.Sin(x) * 10;
             return x * Math.Sin(x * x) * 2;
         }
     }
